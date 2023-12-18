@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_assets.dart';
 import 'package:mindbreeze/ui/screen/res/app_colors.dart';
 import 'package:mindbreeze/ui/screen/res/app_strings.dart';
+import 'package:mindbreeze/ui/screen/widgets/gradient_background.dart';
 
 class ToDoListScreen extends StatefulWidget {
   const ToDoListScreen({super.key});
@@ -28,32 +28,19 @@ class _ToDoListScreenState extends State<ToDoListScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            AppColors.gradientStartColor,
-            AppColors.gradientEndColor,
-          ],
-        ),
-      ),
+    return GradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
           flexibleSpace: _ToDoTitle(),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _ToDoTabBar(tabController: _tabController),
-                _CalendarButton(),
-              ],
-            ),
+            child: Align(
+                alignment: Alignment.bottomLeft,
+                child: _ToDoTabBar(tabController: _tabController)),
           ),
         ),
         body: TabBarView(
@@ -99,7 +86,8 @@ class _ToDoTabBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
       child: PreferredSize(
-        preferredSize: Size(3 * (MediaQuery.of(context).size.width / 4), 50),
+        preferredSize:
+            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)), //50),
         child: TabBar(
           isScrollable: true,
           splashBorderRadius: BorderRadius.circular(16),
@@ -131,51 +119,6 @@ class _ToDoTitle extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: AppColors.textColor,
         ),
-      ),
-    );
-  }
-}
-
-class _CalendarButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: SizedBox(
-        width: 50,
-        height: 50,
-        child: Stack(children: [
-          const Positioned(
-            top: 5,
-            left: 5,
-            child: ImageIcon(
-              AssetImage(
-                AppAssets.calendarAsset,
-              ),
-              color: AppColors.textColor,
-              size: 40,
-            ),
-          ),
-          const Positioned(
-            top: 17,
-            left: 12,
-            child: Text(
-              AppStrings.calendarIconText,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.gradientStartColor),
-            ),
-          ),
-          Positioned.fill(
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () {},
-              ),
-            ),
-          ),
-        ]),
       ),
     );
   }
