@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindbreeze/ui/screen/res/app_colors.dart';
 import 'package:mindbreeze/ui/screen/res/app_strings.dart';
 import 'package:mindbreeze/ui/screen/widgets/gradient_background.dart';
+import 'package:mindbreeze/ui/screen/widgets/to_do_card.dart';
 
 class ToDoListScreen extends StatefulWidget {
   const ToDoListScreen({super.key});
@@ -48,6 +49,11 @@ class _ToDoListScreenState extends State<ToDoListScreen>
           children: const [
             Scaffold(
               backgroundColor: Colors.transparent,
+              body: Column(
+                children: [
+                  ToDoCard(),
+                ],
+              ),
             ),
             Scaffold(
               backgroundColor: Colors.transparent,

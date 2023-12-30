@@ -31,6 +31,13 @@ flutter:
   assets:
     - res/icons/calendar.png
     - res/icons/logo.png
+    - res/icons/circle_button.png
+    - res/icons/sad.png
+    - res/icons/amazed.png
+    - res/icons/angry.png
+    - res/icons/anxious.png
+    - res/icons/broken.png
+    - res/icons/calm.png
 
   
   # fonts:
