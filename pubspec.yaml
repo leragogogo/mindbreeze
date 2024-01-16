@@ -38,6 +38,8 @@ flutter:
     - res/icons/anxious.png
     - res/icons/broken.png
     - res/icons/calm.png
+    - res/icons/done.png
+    - res/icons/plus.png
 
   
   # fonts:

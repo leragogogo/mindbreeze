@@ -32,18 +32,21 @@ class _ToDoCardState extends State<ToDoCard> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                    color: AppColors.gradientStartColor,
+                    color: AppColors.cardColor,
                     borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        padding: const EdgeInsets.only(left: 15),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 5,
+                            SizedBox(
+                              width: 200,
                               child: TextField(
+                                cursorColor: Colors.white,
                                 focusNode: descriptionFocusNode,
                                 onTapOutside: (event) {
                                   descriptionFocusNode.unfocus();
@@ -67,25 +70,24 @@ class _ToDoCardState extends State<ToDoCard> {
                                 ),
                               ),
                             ),
-                            const Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 15, left: 25),
-                                  child: MoodSelectionButton(),
-                                )),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16, right: 15),
+                              child: MoodSelectionButton(),
+                            ),
                           ],
                         ),
                       ),
                     ),
                     const Divider(
                       thickness: 1,
+                      height: 5,
                       color: AppColors.dividerColor,
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        padding: const EdgeInsets.only(left: 15),
                         child: TextField(
+                          cursorColor: Colors.white,
                           focusNode: reasonFocusNode,
                           onTapOutside: (event) {
                             reasonFocusNode.unfocus();

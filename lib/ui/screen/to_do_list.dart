@@ -51,7 +51,10 @@ class _ToDoListScreenState extends State<ToDoListScreen>
               backgroundColor: Colors.transparent,
               body: Column(
                 children: [
-                  ToDoCard(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: ToDoCard(),
+                  ),
                 ],
               ),
             ),
@@ -93,8 +96,9 @@ class _ToDoTabBar extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16),
       child: PreferredSize(
         preferredSize:
-            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)), //50),
+            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)), 
         child: TabBar(
+          labelPadding: const EdgeInsets.only(left: 16),
           isScrollable: true,
           splashBorderRadius: BorderRadius.circular(16),
           tabAlignment: TabAlignment.start,
@@ -116,7 +120,7 @@ class _ToDoTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(left: 32, top: 90),
+      padding: EdgeInsets.only(left: 32, top: 100),
       child: Text(
         AppStrings.toDoTitleText,
         textAlign: TextAlign.start,
