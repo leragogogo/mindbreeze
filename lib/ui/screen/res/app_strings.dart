@@ -3,7 +3,7 @@ class AppStrings{
   static const todayTabText = 'Today';
   static const toDoTitleText = 'To do';
   static const addFirstButtonText = 'Add your first\n To do';
-  static const hintDescriptionText = 'What do you want to do?';
+  static const hintDescriptionText = 'Description';
   static const hintReasonText = "Why you don't what to do it?";
   static const sadMoodText = 'Sad';
   static const angryMoodText = 'Angry';

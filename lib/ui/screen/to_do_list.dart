@@ -96,7 +96,7 @@ class _ToDoTabBar extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16),
       child: PreferredSize(
         preferredSize:
-            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)), 
+            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)),
         child: TabBar(
           labelPadding: const EdgeInsets.only(left: 16),
           isScrollable: true,
