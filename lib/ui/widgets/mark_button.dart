@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_colors.dart';
+import 'package:mindbreeze/ui/res/app_colors.dart';
 
 class MarkButton extends StatefulWidget {
   const MarkButton({super.key});

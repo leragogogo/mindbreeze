@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_colors.dart';
-import 'package:mindbreeze/ui/screen/res/app_strings.dart';
-import 'package:mindbreeze/ui/screen/widgets/gradient_background.dart';
-import 'package:mindbreeze/ui/screen/widgets/to_do_card.dart';
+import 'package:mindbreeze/ui/res/app_colors.dart';
+import 'package:mindbreeze/ui/res/app_strings.dart';
+import 'package:mindbreeze/ui/widgets/gradient_background.dart';
+import 'package:mindbreeze/ui/widgets/to_do_card.dart';
 
 class ToDoListScreen extends StatefulWidget {
   const ToDoListScreen({super.key});
@@ -33,15 +33,17 @@ class _ToDoListScreenState extends State<ToDoListScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          toolbarHeight: 50,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          flexibleSpace: _ToDoTitle(),
+          title: _ToDoTitle(),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: const Size.fromHeight(20),
             child: Align(
-                alignment: Alignment.bottomLeft,
-                child: _ToDoTabBar(tabController: _tabController)),
+              alignment: Alignment.bottomLeft,
+              child: _ToDoTabBar(tabController: _tabController),
+            ),
           ),
         ),
         body: TabBarView(
@@ -106,6 +108,8 @@ class _ToDoTabBar extends StatelessWidget {
           unselectedLabelColor: AppColors.unselectedTabColor,
           labelColor: AppColors.textColor,
           indicatorColor: Colors.transparent,
+          indicator: null,
+          automaticIndicatorColorAdjustment: false,
           tabs: const [
             _ToDoTab(text: AppStrings.incomingTabText),
             _ToDoTab(text: AppStrings.todayTabText),
@@ -119,15 +123,18 @@ class _ToDoTabBar extends StatelessWidget {
 class _ToDoTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 32, top: 100),
-      child: Text(
-        AppStrings.toDoTitleText,
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textColor,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Container(
+        alignment: Alignment.bottomLeft,
+        child: const Text(
+          AppStrings.toDoTitleText,
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textColor,
+          ),
         ),
       ),
     );

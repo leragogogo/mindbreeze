@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_assets.dart';
+import 'package:mindbreeze/ui/res/app_assets.dart';
 import 'package:mindbreeze/ui/screen/to_do_list.dart';
-import 'package:mindbreeze/ui/screen/widgets/gradient_background.dart';
+import 'package:mindbreeze/ui/widgets/gradient_background.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

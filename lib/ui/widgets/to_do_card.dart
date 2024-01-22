@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_colors.dart';
-import 'package:mindbreeze/ui/screen/res/app_strings.dart';
-import 'package:mindbreeze/ui/screen/widgets/mark_button.dart';
-import 'package:mindbreeze/ui/screen/widgets/mood_selection_button.dart';
+import 'package:mindbreeze/ui/res/app_colors.dart';
+import 'package:mindbreeze/ui/res/app_strings.dart';
+import 'package:mindbreeze/ui/widgets/mark_button.dart';
+import 'package:mindbreeze/ui/widgets/mood_selection_button.dart';
 
 class ToDoCard extends StatefulWidget {
   const ToDoCard({super.key});

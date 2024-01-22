@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindbreeze/ui/screen/res/app_colors.dart';
+import 'package:mindbreeze/ui/res/app_colors.dart';
 
 class GradientBackground extends StatelessWidget {
   final Widget child;
