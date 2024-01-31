@@ -11,4 +11,5 @@ class AppStrings{
   static const calmMoodText = 'Calm';
   static const amazedMoodText = 'Amazed';
   static const brokenMoodText = 'Broken';
+  static const noOneToDoText = 'Add your first \nTo Do';
 } 

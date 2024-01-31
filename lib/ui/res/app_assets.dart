@@ -4,4 +4,5 @@ class AppAssets {
   static const String circleButtonAsset = 'res/icons/circle_button.png';
   static const String doneAsset = 'res/icons/done.png';
   static const String plusAsset = 'res/icons/plus.png';
+  static const String binAsset = 'res/icons/bin.png';
 }

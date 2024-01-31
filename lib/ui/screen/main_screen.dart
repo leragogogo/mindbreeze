@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:mindbreeze/ui/res/app_colors.dart';
 import 'package:mindbreeze/ui/res/app_strings.dart';
 import 'package:mindbreeze/ui/widgets/gradient_background.dart';
-import 'package:mindbreeze/ui/widgets/to_do_card.dart';
-
-class ToDoListScreen extends StatefulWidget {
-  const ToDoListScreen({super.key});
+import 'package:mindbreeze/ui/widgets/incoming_tab.dart';
+import 'package:mindbreeze/ui/widgets/today_tab.dart';
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
   @override
-  State<ToDoListScreen> createState() => _ToDoListScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _ToDoListScreenState extends State<ToDoListScreen>
-    with TickerProviderStateMixin {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -49,20 +48,8 @@ class _ToDoListScreenState extends State<ToDoListScreen>
         body: TabBarView(
           controller: _tabController,
           children: const [
-            Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: ToDoCard(),
-                  ),
-                ],
-              ),
-            ),
-            Scaffold(
-              backgroundColor: Colors.transparent,
-            ),
+            IncomingTab(),
+            TodayTab(),
           ],
         ),
       ),

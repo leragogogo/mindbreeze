@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mindbreeze/ui/res/app_assets.dart';
-import 'package:mindbreeze/ui/screen/to_do_list.dart';
+import 'package:mindbreeze/ui/screen/main_screen.dart';
 import 'package:mindbreeze/ui/widgets/gradient_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -58,8 +58,8 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigate() async {
     if (await intialized) {
       if (context.mounted) {
-        await Navigator.of(context).push(MaterialPageRoute<ToDoListScreen>(
-          builder: (context) => const ToDoListScreen(),
+        await Navigator.of(context).push(MaterialPageRoute<MainScreen>(
+          builder: (context) => const MainScreen(),
         ));
       }
     }
