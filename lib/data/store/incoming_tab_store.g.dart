@@ -67,6 +67,17 @@ mixin _$IncomingTabStore on IncomingTabStoreBase, Store {
   }
 
   @override
+  void markDone(int index) {
+    final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
+        name: 'IncomingTabStoreBase.markDone');
+    try {
+      return super.markDone(index);
+    } finally {
+      _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 toDos: ${toDos},

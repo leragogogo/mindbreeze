@@ -7,7 +7,8 @@ import 'package:mindbreeze/ui/widgets/to_do_list.dart';
 import 'package:provider/provider.dart';
 
 class IncomingTab extends StatefulWidget {
-  const IncomingTab({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const IncomingTab({super.key, required this.scaffoldKey});
 
   @override
   State<IncomingTab> createState() => _IncomingTabState();
@@ -18,16 +19,16 @@ class _IncomingTabState extends State<IncomingTab>
   @override
   void initState() {
     super.initState();
-    Provider.of<IncomingTabStore>(context, listen: false).controller =
+    /*Provider.of<IncomingTabStore>(context, listen: false).controller =
         AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
-    );
+    );*/
   }
 
   @override
   void dispose() {
-    Provider.of<IncomingTabStore>(context, listen: false).controller.dispose();
+    //Provider.of<IncomingTabStore>(widget.scaffoldKey.currentContext ?? context, listen: false).controller.dispose();
     super.dispose();
   }
 

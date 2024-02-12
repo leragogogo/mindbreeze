@@ -12,4 +12,5 @@ class AppStrings{
   static const amazedMoodText = 'Amazed';
   static const brokenMoodText = 'Broken';
   static const noOneToDoText = 'Add your first \nTo Do';
+  static const emptyTodayTapText = 'All Done!';
 } 

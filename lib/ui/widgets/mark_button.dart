@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:mindbreeze/data/model/to_do_model.dart';
+import 'package:mindbreeze/data/store/incoming_tab_store.dart';
+import 'package:mindbreeze/data/store/today_tab_store.dart';
 import 'package:mindbreeze/ui/res/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class MarkButton extends StatefulWidget {
-  const MarkButton({super.key});
+  final ToDoModel toDo;
+  final bool isTodayCard;
+  final int index;
+  const MarkButton(
+      {super.key,
+      required this.toDo,
+      required this.isTodayCard,
+      required this.index});
 
   @override
   State<MarkButton> createState() => _MarkButtonState();
@@ -12,7 +23,7 @@ class _MarkButtonState extends State<MarkButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  final List<String> options = ['plus', 'done'];
+  List<String> options = [];
   String image = '';
   FocusNode buttonFocusNode = FocusNode();
 
@@ -34,6 +45,7 @@ class _MarkButtonState extends State<MarkButton>
 
   @override
   Widget build(BuildContext context) {
+    options = widget.isTodayCard ? ['done'] : ['plus', 'done'];
     return Column(
       children: [
         SizedBox(
@@ -104,6 +116,21 @@ class _MarkButtonState extends State<MarkButton>
                       image = option;
                     });
                     _controller.reverse();
+                    if (option == 'plus') {
+                      Provider.of<TodayTabStore>(context, listen: false)
+                          .addToDo(widget.toDo);
+                      Provider.of<IncomingTabStore>(context, listen: false)
+                          .markDone(widget.index);
+                    }
+                    if (option == 'done') {
+                      if (widget.isTodayCard) {
+                        Provider.of<TodayTabStore>(context, listen: false)
+                            .removeToDo(widget.index);
+                      } else {
+                        Provider.of<IncomingTabStore>(context, listen: false)
+                            .markDone(widget.index);
+                      }
+                    }
                   },
                 ),
               );

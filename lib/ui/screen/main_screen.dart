@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mindbreeze/data/store/incoming_tab_store.dart';
+import 'package:mindbreeze/data/store/today_tab_store.dart';
 import 'package:mindbreeze/ui/res/app_colors.dart';
 import 'package:mindbreeze/ui/res/app_strings.dart';
 import 'package:mindbreeze/ui/widgets/gradient_background.dart';
 import 'package:mindbreeze/ui/widgets/incoming_tab.dart';
 import 'package:mindbreeze/ui/widgets/today_tab.dart';
+import 'package:provider/provider.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
   @override
@@ -12,17 +16,35 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late TabController _tabController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-
     _tabController = TabController(length: 2, vsync: this);
+    Provider.of<TodayTabStore>(context, listen: false).controller =
+        AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    Provider.of<IncomingTabStore>(context, listen: false).controller =
+        AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    Provider.of<TodayTabStore>(_scaffoldKey.currentContext ?? context,
+            listen: false)
+        .controller
+        .dispose();
+    Provider.of<IncomingTabStore>(_scaffoldKey.currentContext ?? context,
+            listen: false)
+        .controller
+        .dispose();
     super.dispose();
   }
 
@@ -30,6 +52,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return GradientBackground(
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           toolbarHeight: 50,
@@ -46,10 +69,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
-          children: const [
-            IncomingTab(),
-            TodayTab(),
+          children: [
+            IncomingTab(
+              scaffoldKey: _scaffoldKey,
+            ),
+            TodayTab(
+              scaffoldKey: _scaffoldKey,
+            ),
           ],
         ),
       ),
