@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mindbreeze/data/store/incoming_tab_store.dart';
 import 'package:mindbreeze/ui/res/app_strings.dart';
 import 'package:mindbreeze/ui/widgets/add_to_do_button.dart';
@@ -17,59 +16,39 @@ class IncomingTab extends StatefulWidget {
 class _IncomingTabState extends State<IncomingTab>
     with SingleTickerProviderStateMixin {
   @override
-  void initState() {
-    super.initState();
-    /*Provider.of<IncomingTabStore>(context, listen: false).controller =
-        AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );*/
-  }
-
-  @override
-  void dispose() {
-    //Provider.of<IncomingTabStore>(widget.scaffoldKey.currentContext ?? context, listen: false).controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return AnimatedBuilder(
-          animation:
-              Provider.of<IncomingTabStore>(context, listen: false).controller,
-          builder: (context, child) {
-            return Stack(
-              children: <Widget>[
-                Opacity(
-                  opacity: 1.0 -
-                      Provider.of<IncomingTabStore>(context, listen: false)
-                          .controller
-                          .value,
-                  child: Provider.of<IncomingTabStore>(context, listen: false)
-                          .isEmpty
+    return AnimatedBuilder(
+      animation:
+          Provider.of<IncomingTabStore>(context, listen: false).controller,
+      builder: (context, child) {
+        return Stack(
+          children: <Widget>[
+            Opacity(
+              opacity: 1.0 -
+                  Provider.of<IncomingTabStore>(context, listen: false)
+                      .controller
+                      .value,
+              child:
+                  Provider.of<IncomingTabStore>(context, listen: false).isEmpty
                       ? _EmptyToDoList(addToDo: () {
                           Provider.of<IncomingTabStore>(context, listen: false)
                               .addToDo();
                         })
                       : Container(),
-                ),
-                Opacity(
-                  opacity: Provider.of<IncomingTabStore>(context, listen: false)
-                      .controller
-                      .value,
-                  child: Provider.of<IncomingTabStore>(context, listen: false)
-                          .isEmpty
-                      ? Container()
-                      : ToDoList(
-                          listKey: Provider.of<IncomingTabStore>(context,
-                                  listen: false)
+            ),
+            Opacity(
+              opacity: Provider.of<IncomingTabStore>(context, listen: false)
+                  .controller
+                  .value,
+              child: Provider.of<IncomingTabStore>(context, listen: false)
+                      .isEmpty
+                  ? Container()
+                  : ToDoList(
+                      listKey:
+                          Provider.of<IncomingTabStore>(context, listen: false)
                               .listKey),
-                ),
-              ],
-            );
-          },
+            ),
+          ],
         );
       },
     );

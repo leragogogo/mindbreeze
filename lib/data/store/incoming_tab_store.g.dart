@@ -56,11 +56,22 @@ mixin _$IncomingTabStore on IncomingTabStoreBase, Store {
   }
 
   @override
-  void removeToDo(int index) {
+  void removeToDo(int index, BuildContext context) {
     final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
         name: 'IncomingTabStoreBase.removeToDo');
     try {
-      return super.removeToDo(index);
+      return super.removeToDo(index, context);
+    } finally {
+      _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void markToday(int index, BuildContext context) {
+    final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
+        name: 'IncomingTabStoreBase.markToday');
+    try {
+      return super.markToday(index, context);
     } finally {
       _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
     }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mindbreeze/data/store/incoming_tab_store.dart';
+import 'package:mindbreeze/data/store/main_screen_store.dart';
+import 'package:mindbreeze/data/store/to_do_card_store.dart';
 import 'package:mindbreeze/data/store/today_tab_store.dart';
+import 'package:mindbreeze/ui/res/app_assets.dart';
 import 'package:mindbreeze/ui/res/app_colors.dart';
 import 'package:mindbreeze/ui/res/app_strings.dart';
 import 'package:mindbreeze/ui/widgets/gradient_background.dart';
@@ -15,13 +19,17 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  late TabController _tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    Provider.of<MainScreenStore>(context, listen: false).tabController =
+        TabController(length: 2, vsync: this);
+    Provider.of<MainScreenStore>(context, listen: false)
+        .tabController
+        .addListener(Provider.of<MainScreenStore>(context, listen: false)
+            .handleTabSelection);
     Provider.of<TodayTabStore>(context, listen: false).controller =
         AnimationController(
       duration: const Duration(seconds: 1),
@@ -36,7 +44,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _tabController.dispose();
+    Provider.of<MainScreenStore>(context, listen: false)
+        .tabController
+        .dispose();
     Provider.of<TodayTabStore>(_scaffoldKey.currentContext ?? context,
             listen: false)
         .controller
@@ -50,37 +60,82 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return GradientBackground(
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          toolbarHeight: 50,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: _ToDoTitle(),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(20),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: _ToDoTabBar(tabController: _tabController),
+    return Observer(
+      builder: (context) {
+        return GradientBackground(
+          child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              toolbarHeight: 50,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: _ToDoTitle(),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(20),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _ToDoTabBar(
+                          tabController: Provider.of<MainScreenStore>(context,
+                                  listen: false)
+                              .tabController),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: IconButton(
+                          splashRadius: 24,
+                          onPressed: Provider.of<IncomingTabStore>(context,
+                                          listen: false)
+                                      .isEmpty ||
+                                  Provider.of<MainScreenStore>(context,
+                                              listen: false)
+                                          .currentTab ==
+                                      1
+                              ? null
+                              : () {
+                                  debugPrint(Provider.of<MainScreenStore>(
+                                          context,
+                                          listen: false)
+                                      .tabController
+                                      .index
+                                      .toString());
+                                  Provider.of<MainScreenStore>(context,
+                                          listen: false)
+                                      .clickCalendarButton();
+                                  Provider.of<ToDoCardStore>(context,
+                                          listen: false)
+                                      .markTodayButtonOpacity;
+                                },
+                          icon: Image.asset(
+                            AppAssets.unCalendarAsset,
+                          ),
+                        ),
+                        //),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: Provider.of<MainScreenStore>(context, listen: false)
+                  .tabController,
+              children: [
+                IncomingTab(
+                  scaffoldKey: _scaffoldKey,
+                ),
+                TodayTab(
+                  scaffoldKey: _scaffoldKey,
+                ),
+              ],
             ),
           ),
-        ),
-        body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _tabController,
-          children: [
-            IncomingTab(
-              scaffoldKey: _scaffoldKey,
-            ),
-            TodayTab(
-              scaffoldKey: _scaffoldKey,
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -111,25 +166,21 @@ class _ToDoTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
-      child: PreferredSize(
-        preferredSize:
-            Size.fromWidth(3 * (MediaQuery.of(context).size.width / 4)),
-        child: TabBar(
-          labelPadding: const EdgeInsets.only(left: 16),
-          isScrollable: true,
-          splashBorderRadius: BorderRadius.circular(16),
-          tabAlignment: TabAlignment.start,
-          controller: tabController,
-          unselectedLabelColor: AppColors.unselectedTabColor,
-          labelColor: AppColors.textColor,
-          indicatorColor: Colors.transparent,
-          indicator: null,
-          automaticIndicatorColorAdjustment: false,
-          tabs: const [
-            _ToDoTab(text: AppStrings.incomingTabText),
-            _ToDoTab(text: AppStrings.todayTabText),
-          ],
-        ),
+      child: TabBar(
+        labelPadding: const EdgeInsets.only(left: 16),
+        isScrollable: true,
+        splashBorderRadius: BorderRadius.circular(16),
+        tabAlignment: TabAlignment.start,
+        controller: tabController,
+        unselectedLabelColor: AppColors.unselectedTabColor,
+        labelColor: AppColors.textColor,
+        indicatorColor: Colors.transparent,
+        indicator: null,
+        automaticIndicatorColorAdjustment: false,
+        tabs: const [
+          _ToDoTab(text: AppStrings.incomingTabText),
+          _ToDoTab(text: AppStrings.todayTabText),
+        ],
       ),
     );
   }

@@ -33,18 +33,16 @@ abstract class TodayTabStoreBase with Store {
     if (toDos.length == 1) {
       controller.reverse();
     }
-    
+
     var curToDo = toDos[index];
     listKey.currentState?.removeItem(
         index,
         (context, animation) => SizeTransition(
-            sizeFactor: animation,/*CurvedAnimation(
-              parent: animation,
-              curve: const Interval(0.5, 1.0),
-            ),*/
+            sizeFactor: animation,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 25),
               child: ToDoCard(
+                animation: animation,
                 toDo: curToDo,
                 index: index,
                 isTodayCard: true,

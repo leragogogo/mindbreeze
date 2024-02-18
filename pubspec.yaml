@@ -35,6 +35,7 @@ flutter:
   
   assets:
     - res/icons/calendar.png
+    - res/icons/un_calendar.png
     - res/icons/logo.png
     - res/icons/circle_button.png
     - res/icons/sad.png
@@ -44,6 +45,7 @@ flutter:
     - res/icons/broken.png
     - res/icons/calm.png
     - res/icons/done.png
+    - res/icons/done_background.png
     - res/icons/plus.png
     - res/icons/bin.png
 
