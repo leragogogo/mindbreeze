@@ -3,14 +3,12 @@ import 'package:mindbreeze/ui/res/app_assets.dart';
 
 class MarkDoneButton extends StatefulWidget {
   final VoidCallback onPressed;
-  final int index;
   final bool isToday;
   final Animation<double> animation;
 
   const MarkDoneButton(
       {super.key,
       required this.onPressed,
-      required this.index,
       required this.isToday,
       required this.animation});
 
@@ -47,36 +45,36 @@ class _MarkDoneButtonState extends State<MarkDoneButton>
 
   @override
   Widget build(BuildContext context) {
-        return SizedBox(
-          width: 34,
-          height: 34,
-          child: ElevatedButton(
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0.0),
-                shadowColor: MaterialStateProperty.all(Colors.transparent),
-                padding: MaterialStateProperty.all(EdgeInsets.zero),
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                side: MaterialStateProperty.all(
-                    const BorderSide(color: Colors.white, width: 3)),
-                shape: MaterialStateProperty.all(const CircleBorder()),
-              ),
-              onPressed: startRemoveAnimation,
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      AppAssets.doneBackgroundAsset,
-                    ),
-                    Center(
-                      child: Image.asset(
-                        AppAssets.doneAsset,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+    return SizedBox(
+      width: 34,
+      height: 34,
+      child: ElevatedButton(
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0.0),
+            shadowColor: MaterialStateProperty.all(Colors.transparent),
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.white, width: 3)),
+            shape: MaterialStateProperty.all(const CircleBorder()),
+          ),
+          onPressed: startRemoveAnimation,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Stack(
+              children: [
+                Image.asset(
+                  AppAssets.doneBackgroundAsset,
                 ),
-              )),
-        );
+                Center(
+                  child: Image.asset(
+                    AppAssets.doneAsset,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }

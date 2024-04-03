@@ -21,20 +21,38 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // do async init operation outside of initState.
+  Future<void> _initToDos() async {
+    var pref =
+        await Provider.of<IncomingTabStore>(context, listen: false).getPref();
+    if (mounted) {
+      // read data about previous tasks.
+      Provider.of<IncomingTabStore>(context, listen: false).readToDos(pref);
+      Provider.of<TodayTabStore>(context, listen: false).readToDos(pref);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _initToDos();
     Provider.of<MainScreenStore>(context, listen: false).tabController =
         TabController(length: 2, vsync: this);
+
+    // add listener to tabController to handle tab selection.
     Provider.of<MainScreenStore>(context, listen: false)
         .tabController
         .addListener(Provider.of<MainScreenStore>(context, listen: false)
             .handleTabSelection);
+
+    // init animation controller of TodayTab.
     Provider.of<TodayTabStore>(context, listen: false).controller =
         AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
     );
+
+    // init animation controller of IncomingTab.
     Provider.of<IncomingTabStore>(context, listen: false).controller =
         AnimationController(
       duration: const Duration(seconds: 1),
@@ -96,12 +114,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                       1
                               ? null
                               : () {
-                                  debugPrint(Provider.of<MainScreenStore>(
-                                          context,
-                                          listen: false)
-                                      .tabController
-                                      .index
-                                      .toString());
                                   Provider.of<MainScreenStore>(context,
                                           listen: false)
                                       .clickCalendarButton();
@@ -113,8 +125,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             AppAssets.unCalendarAsset,
                           ),
                         ),
-                        //),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -147,11 +158,17 @@ class _ToDoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double fontSize = 32;
+    if (width <= 320) {
+      fontSize = 20;
+    }
+
     return Text(
       text,
       textAlign: TextAlign.start,
-      style: const TextStyle(
-        fontSize: 32,
+      style: TextStyle(
+        fontSize: fontSize,
       ),
     );
   }

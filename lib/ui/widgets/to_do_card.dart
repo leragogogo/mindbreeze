@@ -12,210 +12,302 @@ import 'package:mindbreeze/ui/widgets/mark_today_button.dart';
 import 'package:mindbreeze/ui/widgets/mood_selection_button.dart';
 import 'package:provider/provider.dart';
 
-class ToDoCard extends StatelessWidget {
+class ToDoCard extends StatefulWidget {
   final ToDoModel toDo;
-  final int index;
   final bool isTodayCard;
   final Animation<double> animation;
+  final Key uKey;
   const ToDoCard(
       {super.key,
       required this.toDo,
-      required this.index,
       required this.isTodayCard,
-      required this.animation});
+      required this.animation,
+      required this.uKey});
+
+  @override
+  State<ToDoCard> createState() => _ToDoCardState();
+}
+
+class _ToDoCardState extends State<ToDoCard> {
+  TextEditingController descriptionController = TextEditingController();
+  FocusNode descriptionFocusNode = FocusNode();
+  TextEditingController excuseController = TextEditingController();
+  FocusNode excuseFocusNode = FocusNode();
+  double position = 0;
+
+  @override
+  void initState() {
+    descriptionController.text = widget.toDo.description;
+    excuseController.text = widget.toDo.excuse;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    descriptionController.dispose();
+    excuseController.dispose();
+    descriptionFocusNode.dispose();
+    excuseFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return !isTodayCard
+    descriptionController.text = widget.toDo.description;
+    excuseController.text = widget.toDo.excuse;
+    return !widget.isTodayCard
         ? Dismissible(
             key: UniqueKey(),
             onDismissed: (direction) {
               Provider.of<IncomingTabStore>(context, listen: false)
-                  .removeToDo(index, context);
+                  .removeToDo(widget.toDo.uKey, context);
             },
             background: Padding(
                 padding: EdgeInsets.only(left: 3 * (width - 34) / 4),
                 child: Image.asset(AppAssets.binAsset)),
-            child: _Card(
-              animation: animation,
-              toDo: toDo,
-              isTodayCard: isTodayCard,
-              index: index,
-            ))
-        : _Card(
-            animation: animation,
-            toDo: toDo,
-            isTodayCard: isTodayCard,
-            index: index,
-          );
-  }
-}
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Observer(
+                        builder: (context) {
+                          return Provider.of<MainScreenStore>(context,
+                                      listen: false)
+                                  .isCalendarPushed
+                              ? MarkTodayButton(
+                                  onPressed: () {
+                                    Provider.of<IncomingTabStore>(context,
+                                            listen: false)
+                                        .markToday(widget.toDo.uKey, context);
+                                    Provider.of<TodayTabStore>(context,
+                                            listen: false)
+                                        .addToDo(widget.toDo);
+                                  },
+                                )
+                              : MarkDoneButton(
+                                  animation: widget.animation,
+                                  isToday: widget.isTodayCard,
+                                  onPressed: () {
+                                    Provider.of<IncomingTabStore>(context,
+                                            listen: false)
+                                        .markDone(widget.toDo.uKey);
+                                  },
+                                );
+                        },
+                      )),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Card(
+                        color: AppColors.cardColor,
+                        margin: const EdgeInsets.only(left: 8),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 60),
+                                    child: TextField(
+                                      controller: descriptionController,
+                                      cursorColor: Colors.white,
+                                      focusNode: descriptionFocusNode,
+                                      onTapOutside: (event) {
+                                        Provider.of<IncomingTabStore>(context,
+                                                listen: false)
+                                            .changeDescription(widget.toDo.uKey,
+                                                descriptionController.text);
 
-class _Card extends StatefulWidget {
-  final ToDoModel toDo;
-  final bool isTodayCard;
-  final int index;
-  final Animation<double> animation;
+                                        descriptionFocusNode.unfocus();
+                                      },
+                                      maxLines: null,
+                                      style: const TextStyle(
+                                        fontSize: 23,
+                                        color: AppColors.textColor,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText:
+                                            AppStrings.hintDescriptionText,
+                                        hintStyle: TextStyle(
+                                          fontSize: 23,
+                                          color: AppColors.unselectedTabColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                  height: 5,
+                                  color: AppColors.dividerColor,
+                                ),
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: TextField(
+                                      controller: excuseController,
+                                      cursorColor: Colors.white,
+                                      focusNode: excuseFocusNode,
+                                      onTapOutside: (event) {
+                                        Provider.of<IncomingTabStore>(context,
+                                                listen: false)
+                                            .changeExcuse(widget.toDo.uKey,
+                                                excuseController.text);
 
-  const _Card({
-    required this.toDo,
-    required this.isTodayCard,
-    required this.index,
-    required this.animation,
-  });
-  @override
-  State<_Card> createState() => _CardState();
-}
-
-class _CardState extends State<_Card> {
-  FocusNode descriptionFocusNode = FocusNode();
-
-  FocusNode reasonFocusNode = FocusNode();
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Row(
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: widget.isTodayCard
-                  ? MarkDoneButton(
+                                        excuseFocusNode.unfocus();
+                                      },
+                                      maxLines: null,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: AppColors.textColor,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: AppStrings.hintReasonText,
+                                        hintStyle: TextStyle(
+                                          fontSize: 18,
+                                          color: AppColors.unselectedTabColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: 16,
+                              left: width - 121,
+                              child: MoodSelectionButton(
+                                enabled: true,
+                                toDo: widget.toDo,
+                                isToday: widget.isTodayCard,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: MarkDoneButton(
                       animation: widget.animation,
-                      index: widget.index,
                       isToday: widget.isTodayCard,
                       onPressed: () {
                         if (widget.isTodayCard) {
                           Provider.of<TodayTabStore>(context, listen: false)
-                              .removeToDo(widget.index);
+                              .markDone(widget.toDo.uKey);
                         } else {
                           Provider.of<IncomingTabStore>(context, listen: false)
-                              .markDone(widget.index);
+                              .markDone(widget.toDo.uKey);
                         }
                       },
-                    )
-                  : Observer(
-                      builder: (context) {
-                        return Provider.of<MainScreenStore>(context,
-                                    listen: false)
-                                .isCalendarPushed
-                            ? MarkTodayButton(
-                                onPressed: () {
-                                  Provider.of<IncomingTabStore>(context,
-                                          listen: false)
-                                      .markToday(widget.index, context);
-                                  Provider.of<TodayTabStore>(context,
-                                          listen: false)
-                                      .addToDo(widget.toDo);
-                                },
-                              )
-                            : MarkDoneButton(
-                                animation: widget.animation,
-                                index: widget.index,
-                                isToday: widget.isTodayCard,
-                                onPressed: () {
-                                  if (widget.isTodayCard) {
-                                    Provider.of<TodayTabStore>(context,
-                                            listen: false)
-                                        .removeToDo(widget.index);
-                                  } else {
-                                    Provider.of<IncomingTabStore>(context,
-                                            listen: false)
-                                        .markDone(widget.index);
-                                  }
-                                },
-                              );
-                      },
                     )),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Card(
-                color: AppColors.cardColor,
-                margin: const EdgeInsets.only(left: 8),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 60),
-                            child: TextField(
-                              cursorColor: Colors.white,
-                              focusNode: descriptionFocusNode,
-                              onTapOutside: (event) {
-                                descriptionFocusNode.unfocus();
-                              },
-                              onSubmitted: (value) {
-                                FocusScope.of(context)
-                                    .requestFocus(reasonFocusNode);
-                              },
-                              maxLines: null,
-                              style: const TextStyle(
-                                fontSize: 23,
-                                color: AppColors.textColor,
-                              ),
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: AppStrings.hintDescriptionText,
-                                hintStyle: TextStyle(
-                                  fontSize: 23,
-                                  color: AppColors.unselectedTabColor,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Card(
+                      color: AppColors.cardColor,
+                      margin: const EdgeInsets.only(left: 8),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 60),
+                                  child: TextField(
+                                    enabled: false,
+                                    controller: descriptionController,
+                                    cursorColor: Colors.white,
+                                    focusNode: descriptionFocusNode,
+                                    onTapOutside: (event) {
+                                      descriptionFocusNode.unfocus();
+                                    },
+                                    maxLines: null,
+                                    style: const TextStyle(
+                                      fontSize: 23,
+                                      color: AppColors.textColor,
+                                    ),
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: AppStrings.hintDescriptionText,
+                                      hintStyle: TextStyle(
+                                        fontSize: 23,
+                                        color: AppColors.unselectedTabColor,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          thickness: 1,
-                          height: 5,
-                          color: AppColors.dividerColor,
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: TextField(
-                              cursorColor: Colors.white,
-                              focusNode: reasonFocusNode,
-                              onTapOutside: (event) {
-                                reasonFocusNode.unfocus();
-                              },
-                              onSubmitted: (value) {
-                                reasonFocusNode.unfocus();
-                              },
-                              maxLines: null,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: AppColors.textColor,
+                              const Divider(
+                                thickness: 1,
+                                height: 5,
+                                color: AppColors.dividerColor,
                               ),
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: AppStrings.hintReasonText,
-                                hintStyle: TextStyle(
-                                  fontSize: 18,
-                                  color: AppColors.unselectedTabColor,
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: TextField(
+                                    enabled: false,
+                                    controller: excuseController,
+                                    cursorColor: Colors.white,
+                                    focusNode: excuseFocusNode,
+                                    onTapOutside: (event) {
+                                      excuseFocusNode.unfocus();
+                                    },
+                                    maxLines: null,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: AppColors.textColor,
+                                    ),
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: AppStrings.hintReasonText,
+                                      hintStyle: TextStyle(
+                                        fontSize: 18,
+                                        color: AppColors.unselectedTabColor,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                          Positioned(
+                            top: 16,
+                            left: width - 117,
+                            child: MoodSelectionButton(
+                              enabled: false,
+                              toDo: widget.toDo,
+                              isToday: widget.isTodayCard,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Positioned(
-                        top: 16,
-                        left: width - 117,
-                        child: const MoodSelectionButron())
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

@@ -1,3 +1,4 @@
+// All app strings.
 class AppStrings{
   static const incomingTabText = 'Incoming';
   static const todayTabText = 'Today';

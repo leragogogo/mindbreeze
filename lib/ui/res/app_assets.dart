@@ -1,3 +1,4 @@
+// All app assets.
 class AppAssets {
   static const String calendarAsset = 'res/icons/calendar.png';
   static const String unCalendarAsset = 'res/icons/un_calendar.png';

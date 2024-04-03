@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+// All app colors.
 class AppColors{
   static const Color gradientStartColor = Color.fromRGBO(62, 14, 98, 1);
   static const Color gradientEndColor =  Color.fromRGBO(143, 43, 230, 1);

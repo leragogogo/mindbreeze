@@ -48,9 +48,10 @@ class _TodayTabState extends State<TodayTab>
 class _EmptyTodayTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(top: 80, left: 100),
-      child: Text(
+    double width = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: EdgeInsets.only(top: 80, left: width / 2 - 80),
+      child: const Text(
         AppStrings.emptyTodayTapText,
         style: TextStyle(
             fontWeight: FontWeight.bold, fontSize: 40, color: Colors.white),
@@ -72,11 +73,13 @@ class _TodayList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(bottom: 25),
             child: ToDoCard(
+              uKey: Provider.of<TodayTabStore>(context, listen: false)
+                  .toDos[index]
+                  .uKey,
               animation: animation,
               isTodayCard: true,
               toDo: Provider.of<TodayTabStore>(context, listen: false)
                   .toDos[index],
-              index: index,
             ),
           );
         },

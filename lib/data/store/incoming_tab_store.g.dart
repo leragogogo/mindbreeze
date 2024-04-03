@@ -41,48 +41,72 @@ mixin _$IncomingTabStore on IncomingTabStoreBase, Store {
     });
   }
 
+  late final _$addToDoAsyncAction =
+      AsyncAction('IncomingTabStoreBase.addToDo', context: context);
+
+  @override
+  Future<void> addToDo() {
+    return _$addToDoAsyncAction.run(() => super.addToDo());
+  }
+
+  late final _$removeToDoAsyncAction =
+      AsyncAction('IncomingTabStoreBase.removeToDo', context: context);
+
+  @override
+  Future<void> removeToDo(Key key, BuildContext context) {
+    return _$removeToDoAsyncAction.run(() => super.removeToDo(key, context));
+  }
+
+  late final _$markTodayAsyncAction =
+      AsyncAction('IncomingTabStoreBase.markToday', context: context);
+
+  @override
+  Future<void> markToday(Key key, BuildContext context) {
+    return _$markTodayAsyncAction.run(() => super.markToday(key, context));
+  }
+
+  late final _$markDoneAsyncAction =
+      AsyncAction('IncomingTabStoreBase.markDone', context: context);
+
+  @override
+  Future<void> markDone(Key key) {
+    return _$markDoneAsyncAction.run(() => super.markDone(key));
+  }
+
+  late final _$changeDescriptionAsyncAction =
+      AsyncAction('IncomingTabStoreBase.changeDescription', context: context);
+
+  @override
+  Future<void> changeDescription(Key key, String description) {
+    return _$changeDescriptionAsyncAction
+        .run(() => super.changeDescription(key, description));
+  }
+
+  late final _$changeExcuseAsyncAction =
+      AsyncAction('IncomingTabStoreBase.changeExcuse', context: context);
+
+  @override
+  Future<void> changeExcuse(Key key, String excuse) {
+    return _$changeExcuseAsyncAction.run(() => super.changeExcuse(key, excuse));
+  }
+
+  late final _$changeMoodAsyncAction =
+      AsyncAction('IncomingTabStoreBase.changeMood', context: context);
+
+  @override
+  Future<void> changeMood(Key key, String mood) {
+    return _$changeMoodAsyncAction.run(() => super.changeMood(key, mood));
+  }
+
   late final _$IncomingTabStoreBaseActionController =
       ActionController(name: 'IncomingTabStoreBase', context: context);
 
   @override
-  void addToDo() {
+  void readToDos(SharedPreferences pref) {
     final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
-        name: 'IncomingTabStoreBase.addToDo');
+        name: 'IncomingTabStoreBase.readToDos');
     try {
-      return super.addToDo();
-    } finally {
-      _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removeToDo(int index, BuildContext context) {
-    final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
-        name: 'IncomingTabStoreBase.removeToDo');
-    try {
-      return super.removeToDo(index, context);
-    } finally {
-      _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void markToday(int index, BuildContext context) {
-    final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
-        name: 'IncomingTabStoreBase.markToday');
-    try {
-      return super.markToday(index, context);
-    } finally {
-      _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void markDone(int index) {
-    final _$actionInfo = _$IncomingTabStoreBaseActionController.startAction(
-        name: 'IncomingTabStoreBase.markDone');
-    try {
-      return super.markDone(index);
+      return super.readToDos(pref);
     } finally {
       _$IncomingTabStoreBaseActionController.endAction(_$actionInfo);
     }

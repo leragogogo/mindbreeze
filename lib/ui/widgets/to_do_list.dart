@@ -35,12 +35,15 @@ class _ToDoListState extends State<ToDoList> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
                     child: ToDoCard(
-                      animation: animation,
-                      isTodayCard: false,
+                      uKey:
+                          Provider.of<IncomingTabStore>(context, listen: false)
+                              .toDos[index]
+                              .uKey,
                       toDo:
                           Provider.of<IncomingTabStore>(context, listen: false)
                               .toDos[index],
-                      index: index,
+                      animation: animation,
+                      isTodayCard: false,
                     ),
                   ));
             },

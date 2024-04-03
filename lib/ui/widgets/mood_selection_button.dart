@@ -1,158 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:mindbreeze/data/model/to_do_model.dart';
+import 'package:mindbreeze/data/store/incoming_tab_store.dart';
 import 'package:mindbreeze/ui/res/app_colors.dart';
 import 'package:mindbreeze/ui/res/app_strings.dart';
+import 'package:provider/provider.dart';
 
-class MoodSelectionButron extends StatefulWidget {
-  const MoodSelectionButron({super.key});
+class MoodSelectionButton extends StatefulWidget {
+  final bool enabled;
+  final ToDoModel toDo;
+  final bool isToday;
+  const MoodSelectionButton(
+      {super.key,
+      required this.toDo,
+      required this.isToday,
+      required this.enabled});
 
   @override
-  State<MoodSelectionButron> createState() => _MoodSelectionButronState();
+  State<MoodSelectionButton> createState() => _MoodSelectionButtonState();
 }
 
-class _MoodSelectionButronState extends State<MoodSelectionButron>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  final List<String> moods = [
-    AppStrings.sadMoodText,
-    AppStrings.angryMoodText,
-    AppStrings.anxiousMoodText,
-    AppStrings.calmMoodText,
-    AppStrings.amazedMoodText,
-    AppStrings.brokenMoodText
-  ];
-  FocusNode buttonFocusNode = FocusNode();
-  bool isMoodChosen = false;
-  String moodImage = '';
-  
-  OverlayEntry? _overlayEntry;
-  final LayerLink _layerLink = LayerLink();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _overlayEntry?.remove();
-    super.dispose();
-  }
-
-  void toggleDropdown() {
-    if (_controller.isDismissed) {
-      _controller.forward();
-    } else if (_controller.isCompleted) {
-      _controller.reverse();
-    }
-  }
+class _MoodSelectionButtonState extends State<MoodSelectionButton> {
+  String mood = '';
 
   @override
   Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: SizedBox(
-          width: 21,
-          height: 21,
-          child: ElevatedButton(
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0.0),
-                shadowColor: MaterialStateProperty.all(Colors.transparent),
-                padding: MaterialStateProperty.all(EdgeInsets.zero),
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                side: MaterialStateProperty.all(
-                    const BorderSide(color: Colors.white, width: 1)),
-                shape: MaterialStateProperty.all(const CircleBorder()),
-              ),
-              focusNode: buttonFocusNode,
-              onPressed: () {
-                if (_controller.isDismissed) {
-                  _controller.forward();
-                } else if (_controller.isCompleted) {
-                  _controller.reverse();
-                }
-                _showOverlay(context);
-              },
-              child: isMoodChosen
-                  ? SizedBox(
-                      width: 21,
-                      height: 21,
-                      child: Image.asset(
-                        'res/icons/$moodImage.png',
-                        color: Colors.white,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : null)),
-    );
-  }
-
-  void _showOverlay(BuildContext context) {
-    final renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx - 25,
-        top: offset.dy + size.height,
-        child: ScaleTransition(
-          scale: _scaleAnimation,
-          alignment: Alignment.topCenter,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            height: 290,
-            child: Column(
-              children: moods.map((mood) {
-                return ElevatedButton(
-                  style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(Colors.transparent),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                  ),
-                  child: SizedBox(
-                    width: 47,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'res/icons/${mood.toLowerCase()}.png',
-                          width: 25,
-                          height: 25,
-                          color: AppColors.cardColor,
-                        ),
-                        Text(
-                          mood,
-                          style: const TextStyle(
-                              fontSize: 12, color: AppColors.cardColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isMoodChosen = true;
-                      moodImage = mood.toLowerCase();
-                      _controller.reverse();
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-          ),
+    return Container(
+      width: 30,
+      height: 30,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: widget.toDo.mood == ''
+              ? Border.all(color: Colors.white, width: 2)
+              : null),
+      child: PopupMenuButton<String>(
+        enabled: widget.enabled,
+        initialValue: widget.toDo.mood,
+        position: PopupMenuPosition.under,
+        offset: const Offset(40, 0),
+        iconSize: 0,
+        constraints: BoxConstraints.tight(const Size(80, 310)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
+        padding: const EdgeInsets.all(0.0),
+        onSelected: (String value) {
+          setState(() {
+            mood = value;
+          });
+          if (!widget.isToday) {
+            Provider.of<IncomingTabStore>(context, listen: false)
+                .changeMood(widget.toDo.uKey, value.toLowerCase());
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          return <String>[
+            AppStrings.sadMoodText,
+            AppStrings.angryMoodText,
+            AppStrings.anxiousMoodText,
+            AppStrings.calmMoodText,
+            AppStrings.amazedMoodText,
+            AppStrings.brokenMoodText
+          ].map((String value) {
+            return PopupMenuItem<String>(
+              value: value,
+              child: SizedBox(
+                width: 47,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'res/icons/${value.toLowerCase()}.png',
+                      width: 25,
+                      height: 25,
+                      color: AppColors.cardColor,
+                    ),
+                    Text(
+                      value,
+                      style: const TextStyle(
+                          fontSize: 12, color: AppColors.cardColor),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList();
+        },
+        child: widget.toDo.mood == ''
+            ? null
+            : Image.asset(
+                'res/icons/${widget.toDo.mood.toLowerCase()}.png',
+                width: 32,
+                height: 32,
+                color: Colors.white,
+              ),
       ),
     );
-
-    Overlay.of(context).insert(_overlayEntry!);
   }
 }

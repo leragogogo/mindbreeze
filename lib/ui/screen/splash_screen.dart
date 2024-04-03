@@ -5,6 +5,7 @@ import 'package:mindbreeze/ui/res/app_assets.dart';
 import 'package:mindbreeze/ui/screen/main_screen.dart';
 import 'package:mindbreeze/ui/widgets/gradient_background.dart';
 
+// Screen during initialization.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -15,6 +16,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   final intialized = Future.delayed(const Duration(seconds: 4), () => true);
+  
+  // contoller for rotating animation of label.
   late AnimationController _animationController;
 
   @override
@@ -55,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  // navigate to MainScreen.
   void _navigate() async {
     if (await intialized) {
       if (context.mounted) {

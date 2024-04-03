@@ -41,26 +41,31 @@ mixin _$TodayTabStore on TodayTabStoreBase, Store {
     });
   }
 
+  late final _$addToDoAsyncAction =
+      AsyncAction('TodayTabStoreBase.addToDo', context: context);
+
+  @override
+  Future<void> addToDo(ToDoModel toDo) {
+    return _$addToDoAsyncAction.run(() => super.addToDo(toDo));
+  }
+
+  late final _$removeToDoAsyncAction =
+      AsyncAction('TodayTabStoreBase.removeToDo', context: context);
+
+  @override
+  Future<void> markDone(Key key) {
+    return _$removeToDoAsyncAction.run(() => super.markDone(key));
+  }
+
   late final _$TodayTabStoreBaseActionController =
       ActionController(name: 'TodayTabStoreBase', context: context);
 
   @override
-  void addToDo(ToDoModel toDo) {
+  void readToDos(SharedPreferences pref) {
     final _$actionInfo = _$TodayTabStoreBaseActionController.startAction(
-        name: 'TodayTabStoreBase.addToDo');
+        name: 'TodayTabStoreBase.readToDos');
     try {
-      return super.addToDo(toDo);
-    } finally {
-      _$TodayTabStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removeToDo(int index) {
-    final _$actionInfo = _$TodayTabStoreBaseActionController.startAction(
-        name: 'TodayTabStoreBase.removeToDo');
-    try {
-      return super.removeToDo(index);
+      return super.readToDos(pref);
     } finally {
       _$TodayTabStoreBaseActionController.endAction(_$actionInfo);
     }
