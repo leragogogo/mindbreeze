@@ -49,12 +49,12 @@ mixin _$TodayTabStore on TodayTabStoreBase, Store {
     return _$addToDoAsyncAction.run(() => super.addToDo(toDo));
   }
 
-  late final _$removeToDoAsyncAction =
-      AsyncAction('TodayTabStoreBase.removeToDo', context: context);
+  late final _$markDoneAsyncAction =
+      AsyncAction('TodayTabStoreBase.markDone', context: context);
 
   @override
   Future<void> markDone(Key key) {
-    return _$removeToDoAsyncAction.run(() => super.markDone(key));
+    return _$markDoneAsyncAction.run(() => super.markDone(key));
   }
 
   late final _$TodayTabStoreBaseActionController =

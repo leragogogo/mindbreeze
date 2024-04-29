@@ -43,19 +43,23 @@ abstract class TodayTabStoreBase with Store {
     var index = findElementByKey(key);
     var curToDo = toDos[index];
     listKey.currentState?.removeItem(
-        index,
-        (context, animation) => SizeTransition(
-            sizeFactor: animation,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 25),
-              child: ToDoCard(
-                uKey: key,
-                key: key,
-                animation: animation,
-                toDo: curToDo,
-                isTodayCard: true,
-              ),
-            )));
+      index,
+      (context, animation) => SlideTransition(
+        position: animation.drive(Tween<Offset>(
+          begin: const Offset(1, 0),
+          end: Offset.zero,
+        )),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: ToDoCard(
+            uKey: key,
+            animation: animation,
+            toDo: curToDo,
+            isTodayCard: false,
+          ),
+        ),
+      ),
+    );
     toDos.removeAt(index);
     isEmpty = toDos.isEmpty;
     saveToDos();

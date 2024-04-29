@@ -105,8 +105,11 @@ abstract class IncomingTabStoreBase with Store {
     var curToDo = toDos[index];
     listKey.currentState?.removeItem(
       index,
-      (context, animation) => SizeTransition(
-        sizeFactor: animation,
+      (context, animation) => SlideTransition(
+        position: animation.drive(Tween<Offset>(
+          begin: const Offset(1, 0),
+          end: Offset.zero,
+        )),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 25),
           child: ToDoCard(

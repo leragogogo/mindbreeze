@@ -78,6 +78,11 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double calendarSize = 35;
+    if (width <= 320) {
+      calendarSize = 30;
+    }
     return Observer(
       builder: (context) {
         return GradientBackground(
@@ -104,6 +109,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       Padding(
                         padding: const EdgeInsets.only(right: 16),
                         child: IconButton(
+                          iconSize: calendarSize,
                           splashRadius: 24,
                           onPressed: Provider.of<IncomingTabStore>(context,
                                           listen: false)
@@ -183,21 +189,27 @@ class _ToDoTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
-      child: TabBar(
-        labelPadding: const EdgeInsets.only(left: 16),
-        isScrollable: true,
-        splashBorderRadius: BorderRadius.circular(16),
-        tabAlignment: TabAlignment.start,
-        controller: tabController,
-        unselectedLabelColor: AppColors.unselectedTabColor,
-        labelColor: AppColors.textColor,
-        indicatorColor: Colors.transparent,
-        indicator: null,
-        automaticIndicatorColorAdjustment: false,
-        tabs: const [
-          _ToDoTab(text: AppStrings.incomingTabText),
-          _ToDoTab(text: AppStrings.todayTabText),
-        ],
+      child: Theme(
+        data: ThemeData(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+        ),
+        child: TabBar(
+          labelPadding: const EdgeInsets.only(left: 16),
+          isScrollable: true,
+          splashBorderRadius: BorderRadius.circular(16),
+          tabAlignment: TabAlignment.start,
+          controller: tabController,
+          unselectedLabelColor: AppColors.unselectedTabColor,
+          labelColor: AppColors.textColor,
+          indicatorColor: Colors.transparent,
+          indicator: null,
+          automaticIndicatorColorAdjustment: false,
+          tabs: const [
+            _ToDoTab(text: AppStrings.incomingTabText),
+            _ToDoTab(text: AppStrings.todayTabText),
+          ],
+        ),
       ),
     );
   }

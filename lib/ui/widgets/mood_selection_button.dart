@@ -88,8 +88,7 @@ class _MoodSelectionButtonState extends State<MoodSelectionButton> {
             ? null
             : Image.asset(
                 'res/icons/${widget.toDo.mood.toLowerCase()}.png',
-                width: 32,
-                height: 32,
+                scale: 0.8,
                 color: Colors.white,
               ),
       ),
